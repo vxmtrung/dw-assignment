@@ -1,0 +1,1 @@
+***Chứa dữ liệu thô (dữ liệu gốc từ các nguồn khác nhau)***

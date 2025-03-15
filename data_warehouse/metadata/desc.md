@@ -1,0 +1,1 @@
+*** Chứa thông tin mô tả về cấu trúc bảng, cấu trúc dữ liệu ***
