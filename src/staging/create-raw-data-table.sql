@@ -22,6 +22,6 @@ CREATE TABLE IF NOT EXISTS raw_traffic_accidents (
     injuries_reported_not_evident INT,
     injuries_no_indication INT,
     crash_hour INT,
-    crash_day_of_week TEXT,
+    crash_day_of_week INT,
     crash_month INT
 );
