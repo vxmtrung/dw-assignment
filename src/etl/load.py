@@ -14,7 +14,7 @@ def load_to_db(df, table_name):
       crash_hour, crash_day_of_week, crash_month
   """
     for _, row in df.iterrows():
-      cursor.execute(f"INSERT INTO {table_name} ({columns}) VALUES %s", (tuple(row),))
+      cursor.execute(f"INSERT INTO {table_name} ({columns}) VALUES %s ON CONFLICT DO NOTHING;", (tuple(row),))
       
     print(f"Data successfully loaded into table {table_name}!")
     
@@ -124,7 +124,29 @@ def distribute_data_to_fact_table():
         JOIN dim_lighting li ON a.lighting_condition = li.lighting_condition
         JOIN dim_crash_type c ON a.first_crash_type = c.first_crash_type AND a.crash_type = c.crash_type
         JOIN dim_road_alignment ra ON a.alignment = ra.alignment
-        JOIN dim_traffic_control_device tc ON a.traffic_control_device = tc.traffic_control_device;
+        JOIN dim_traffic_control_device tc ON a.traffic_control_device = tc.traffic_control_device
+        WHERE NOT EXISTS (
+        SELECT 1 FROM fact_accidents f
+        WHERE 
+            f.date_id = d.id AND
+            f.location_id = lo.id AND
+            f.road_condition_id = rc.id AND
+            f.weather_id = w.id AND
+            f.lighting_id = li.id AND
+            f.crash_type_id = c.id AND
+            f.road_alignment_id = ra.id AND
+            f.traffic_control_device_id = tc.id AND
+            f.num_units = a.num_units AND
+            f.most_severe_injury = a.most_severe_injury AND
+            f.injuries_total = a.injuries_total AND
+            f.injuries_fatal = a.injuries_fatal AND
+            f.injuries_incapacitating = a.injuries_incapacitating AND
+            f.injuries_non_incapacitating = a.injuries_non_incapacitating AND
+            f.injuries_reported_not_evident = a.injuries_reported_not_evident AND
+            f.injuries_no_indication = a.injuries_no_indication AND
+            f.damage = a.damage AND
+            f.prim_contributory_cause = a.prim_contributory_cause
+        );
     """
     cursor.execute(query)
     

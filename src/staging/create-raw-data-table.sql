@@ -23,5 +23,13 @@ CREATE TABLE IF NOT EXISTS raw_traffic_accidents (
     injuries_no_indication INT,
     crash_hour INT,
     crash_day_of_week INT,
-    crash_month INT
+    crash_month INT,
+    UNIQUE (
+        crash_date, crash_hour, traffic_control_device, weather_condition, lighting_condition,
+        first_crash_type, trafficway_type, alignment, roadway_surface_cond, road_defect,
+        crash_type, intersection_related, damage, prim_contributory_cause, num_units,
+        most_severe_injury, injuries_total, injuries_fatal, injuries_incapacitating,
+        injuries_non_incapacitating, injuries_reported_not_evident, injuries_no_indication,
+        crash_day_of_week, crash_month
+    )
 );

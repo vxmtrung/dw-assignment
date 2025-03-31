@@ -3,7 +3,7 @@ from etl.transform import transform_data
 from etl.load import load_to_db, distribute_data_to_dim_tables, distribute_data_to_fact_table
 
 def main():
-  df = extract_csv("../data/raw/traffic_accidents.csv")
+  df = extract_csv()
   df = transform_data(df)
   load_to_db(df, "raw_traffic_accidents")
 
