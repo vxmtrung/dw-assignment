@@ -1,4 +1,4 @@
-# Bài tập lớn Kho dữ Liệu và Hệ hỗ trợ Quyết định (CO4031)
+# NHÓM 8 - HK242 - Bài tập lớn Kho dữ Liệu và Hệ hỗ trợ Quyết định (CO4031)
 
 ## 1. Yêu cầu:
 - Chủ đề: tự chọn.
