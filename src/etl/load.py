@@ -1,5 +1,6 @@
 import psycopg2
 from config import DB_CONFIG
+from pathlib import Path
 
 def load_to_db(df, table_name):
   try:
@@ -157,4 +158,54 @@ def distribute_data_to_fact_table():
   except Exception as e:
     print(f"Error loading data into fact table: {e}")
 
+src_dir = Path(Path(__file__).resolve()).parents[1]
 
+def create_data_table():
+  with open(src_dir / "scripts" / "create-data-table.sql", "r") as f:
+    sql = f.read()
+
+  conn = psycopg2.connect(**DB_CONFIG)
+  cursor = conn.cursor()
+  
+  cursor.execute(sql)
+  conn.commit()
+
+  conn.close()
+
+def create_dim_tables():
+  dim_tables_dir = src_dir / "olap" / "dimension_tables"
+
+  conn = psycopg2.connect(**DB_CONFIG)
+  cursor = conn.cursor()
+
+  for sql_file in sorted(dim_tables_dir.glob("*.sql")):
+    print(f"Executing {sql_file.name}")
+    sql = sql_file.read_text()
+    try:
+        cursor.execute(sql)
+        conn.commit()
+        print(f"✅ {sql_file.name} executed successfully.\n")
+    except Exception as e:
+        print(f"❌ Error executing {sql_file.name}: {e}\n")
+        conn.rollback()
+  
+  conn.close()
+
+def create_fact_tables():
+  fact_tables_dir = src_dir / "olap" / "fact_tables"
+
+  conn = psycopg2.connect(**DB_CONFIG)
+  cursor = conn.cursor()
+
+  for sql_file in sorted(fact_tables_dir.glob("*.sql")):
+    print(f"Executing {sql_file.name}")
+    sql = sql_file.read_text()
+    try:
+        cursor.execute(sql)
+        conn.commit()
+        print(f"✅ {sql_file.name} executed successfully.\n")
+    except Exception as e:
+        print(f"❌ Error executing {sql_file.name}: {e}\n")
+        conn.rollback()
+  
+  conn.close()

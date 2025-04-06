@@ -1,1 +1,0 @@
-***Chứa dữ liệu đã qua ETL***
